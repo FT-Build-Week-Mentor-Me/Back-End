@@ -1,7 +1,7 @@
 const db = require('../data/db-config')
 
 async function register(user) {
-    const [id] = await db('users').insert(user)
+    const [id] = await db('users').insert(user, 'id')
 
     return findById(id)
 }
