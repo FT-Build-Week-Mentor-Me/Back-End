@@ -1,7 +1,7 @@
 
 exports.seed = function (knex) {
   // Deletes ALL existing entries
-  return knex('threads').truncate()
+  return knex('threads').del()
     .then(function () {
       // Inserts seed entries
       return knex('threads').insert([
