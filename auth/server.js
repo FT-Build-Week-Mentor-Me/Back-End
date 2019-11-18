@@ -17,7 +17,7 @@ server.get('/', (req, res) => {
 
 
 // Will have http://localhost:7000/login and /register
-server.use('/', userRouter)
-server.use('/', threadsRouter)
+server.use('/api/', userRouter)
+server.use('/api', threadsRouter)
 
 module.exports = server;

@@ -32,4 +32,47 @@ router.get('/threads', (req, res) => {
         })
 })
 
+router.post('/new-thread', (req, res) => {
+    const thread = req.body
+    db.addThread(thread)
+        .then(thread => {
+            res.status(200).json(thread)
+        })
+})
+
+router.delete('/:id/thread', (req, res) => {
+    const id = req.params.id
+    db.deleteThread(id)
+        .then(deleted => {
+            if (deleted) {
+                res.status(200).json({ removed: deleted })
+            } else {
+                res.status(404).json(`could not find thread with that id`)
+            }
+        })
+        .catch(err => {
+            res.status(400).json(`Bad request: ${err}`)
+        })
+})
+
+router.put('/:id/thread', (req, res) => {
+    const id = req.params.id
+    const updated = req.body
+
+    db.findThreadById(id)
+        .then(thread => {
+            if (thread) {
+                db.editThread(updated, id)
+                    .then(updatedThread => {
+                        res.status(200).json(updatedThread)
+                    })
+            } else {
+                res.status(404).json(`Could not find thread with given id`)
+            }
+        })
+        .catch(error => {
+            res.status(500).json(`Bad request ${err}`)
+        })
+})
+
 module.exports = router;

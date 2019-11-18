@@ -15,13 +15,30 @@ function findAllThreads() {
     return db('threads')
 }
 
-function addThread(thread, id) {
-    const user = userDB.findById(id)
-    return db
+function addThread(thread) {
+    return db('threads')
         .insert(thread)
+}
+
+function findThreadById(threadId) {
+    return db('threads')
+        .where({ id: threadId })
+}
+
+async function deleteThread(id) {
+    const deleted = await findThreadById(id)
+    return db('threads').where({ id }).del().then(() => deleted)
+}
+
+function editThread(thread, id) {
+    return db('threads').where({ id }).update(thread)
 }
 
 module.exports = {
     findThreads,
-    findAllThreads
+    findAllThreads,
+    addThread,
+    deleteThread,
+    findThreadById,
+    editThread
 }
