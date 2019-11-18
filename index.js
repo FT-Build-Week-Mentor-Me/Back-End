@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const server = require('./api/server')
+const server = require('./auth/server')
 
 const PORT = process.env.PORT || 7000
 
