@@ -13,7 +13,7 @@ function findAllThreads() {
 
 function addThread(thread) {
     return db('threads')
-        .insert(thread)
+        .insert(thread, 'id')
 }
 
 function findThreadById(threadId) {
