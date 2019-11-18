@@ -9,7 +9,7 @@ const loginVerification = require('../auth/login-middleware')
 
 
 // Users can login with either username or email, returns a token for FE Devs to put in header
-router.post('/login', loginVerification, (req, res) => {
+router.post('/login', (req, res) => {
     const { username, password, email } = req.body;
     if (username) {
         db.usernameLogin(username)
