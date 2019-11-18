@@ -15,10 +15,8 @@ router.post('/login', loginVerification, (req, res) => {
         db.usernameLogin(username)
             .first()
             .then(user => {
-                console.log(user.username)
                 if (user && bcrypt.compareSync(password, user.password)) {
-                    const token = getJwtToken(user.username)
-                    console.log('This is before toekn gen', user.username)
+                    const token = getJwtToken(user)
                     res.status(200).json({
                         message: `Welcome ${user.username}`,
                         token
@@ -37,6 +35,7 @@ router.post('/login', loginVerification, (req, res) => {
 
                 if (user && bcrypt.compareSync(password, user.password)) {
                     const token = getJwtToken(user.username)
+                    console.log('This is before toekn gen', user.id)
                     res.status(200).json({
                         message: `Welcome ${user.username}`,
                         token
@@ -65,13 +64,29 @@ router.post('/register', (req, res) => {
         })
 })
 
-function getJwtToken(username) {
+
+//Gets a single user by ID
+router.get('/user/:id', (req, res) => {
+    const id = req.params.id
+    db.findById(id)
+        .then(user => {
+            if (user) {
+                res.status(200).json(user)
+            } else {
+                res.status(404).json(`user does not exist`)
+            }
+        })
+        .catch(err => {
+            res.status(400).json(`bad request to /user/id`)
+        })
+})
+
+function getJwtToken(user) {
     const payload = {
-        username,
-        profile_type: 'Mentor'
+        id: user.id
     }
 
-    const secret = process.env.JWT_SECRET || "This is secret"
+    const secret = process.env.JWT_SECRET
 
     const options = {
         expiresIn: '2d'

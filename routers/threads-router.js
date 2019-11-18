@@ -6,10 +6,10 @@ const db = require('../models/threads-model')
 
 // Gets a users threads from their ID
 router.get('/user/:id/threads', (req, res) => {
-    const id = req.params.id;
-
-    db.findThreads(id)
+    const author_id = req.params.id;
+    db.findThreads(author_id)
         .then(thread => {
+            console.log(thread)
             if (thread.length > 0) {
                 res.status(200).json(thread)
             } else {
@@ -32,14 +32,37 @@ router.get('/threads', (req, res) => {
         })
 })
 
+
+// gets a single thread by it's id
+router.get('/:id/thread', (req, res) => {
+    const id = req.params.id
+    db.findThreadById(id)
+        .then(thread => {
+            if (thread.length > 0) {
+                res.status(200).json(thread)
+            } else {
+                res.status(404).json(`thread ${id} does not exist`)
+            }
+        })
+        .catch(err => {
+            res.status(400).json(`bad request ${err}`)
+        })
+})
+
+// creates a new thread
 router.post('/new-thread', (req, res) => {
     const thread = req.body
     db.addThread(thread)
         .then(thread => {
             res.status(200).json(thread)
         })
+        .catch(err => {
+            res.status(404).json({ ERROR: `Bad Request ${err}` })
+        })
 })
 
+
+//Will delete a thread via ID
 router.delete('/:id/thread', (req, res) => {
     const id = req.params.id
     db.deleteThread(id)
@@ -55,6 +78,7 @@ router.delete('/:id/thread', (req, res) => {
         })
 })
 
+// Allows user to update their thread
 router.put('/:id/thread', (req, res) => {
     const id = req.params.id
     const updated = req.body
