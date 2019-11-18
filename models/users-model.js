@@ -14,15 +14,16 @@ function findById(id) {
 
 function usernameLogin(user) {
     return db('users')
-        .select('username', 'email', 'id')
+        .select('username', 'email', 'id', 'email', 'password')
         .where({ username: user })
 }
 
 function emailLogin(userEmail) {
     return db('users')
-        .select('username', 'email', 'id')
+        .select('username', 'email', 'id', 'password')
         .where({ email: userEmail })
 }
+
 
 
 
@@ -31,6 +32,4 @@ module.exports = {
     usernameLogin,
     emailLogin,
     findById,
-
-
 }

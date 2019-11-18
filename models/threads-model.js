@@ -1,4 +1,5 @@
 const db = require('../data/db-config')
+const userDB = require('../models/users-model')
 
 function findThreads(id) {
     return db
@@ -12,6 +13,12 @@ function findThreads(id) {
 
 function findAllThreads() {
     return db('threads')
+}
+
+function addThread(thread, id) {
+    const user = userDB.findById(id)
+    return db
+        .insert(thread)
 }
 
 module.exports = {

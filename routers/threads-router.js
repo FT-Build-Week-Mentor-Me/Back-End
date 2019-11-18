@@ -21,6 +21,7 @@ router.get('/user/:id/threads', (req, res) => {
         })
 })
 
+// Displays all avalible threads
 router.get('/threads', (req, res) => {
     db.findAllThreads()
         .then(threads => {

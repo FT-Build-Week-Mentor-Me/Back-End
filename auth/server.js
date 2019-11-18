@@ -15,6 +15,8 @@ server.get('/', (req, res) => {
     res.status(200).json('server is live')
 })
 
+
+// Will have http://localhost:7000/login and /register
 server.use('/', userRouter)
 server.use('/', threadsRouter)
 
