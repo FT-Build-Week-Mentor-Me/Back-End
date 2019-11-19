@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 
 const db = require('../models/users-model')
 
-const loginVerification = require('../auth/login-middleware')
+const loginVerification = require('../auth/verification-middleware')
 
 
 // Users can login with either username or email, returns a token for FE Devs to put in header
