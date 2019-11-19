@@ -1,6 +1,8 @@
 const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 
+const { check, validationResult } = require('express-validator')
+
 const jwt = require('jsonwebtoken')
 
 const db = require('../models/users-model')
@@ -50,19 +52,28 @@ router.post('/login', (req, res) => {
 
 
 // requires 4 fields, username, password, email, profile_type
-router.post('/register', (req, res) => {
-    let user = req.body;
-    const hash = bcrypt.hashSync(user.password, 12)
-    user.password = hash;
+router.post('/register', [
+    check('password').isLength({ min: 5 })
 
-    db.register(user)
-        .then(user => {
-            res.status(200).json(user)
-        })
-        .catch(err => {
-            res.status(400).json({ Error: `Bad Request: ${err}` })
-        })
-})
+],
+    (req, res) => {
+        const errors = validationResult(req)
+        if (!errors.isEmpty()) {
+            return res.status(422).json({ errors: errors.array() })
+        }
+
+        let user = req.body;
+        const hash = bcrypt.hashSync(user.password, 12)
+        user.password = hash;
+
+        db.register(user)
+            .then(user => {
+                res.status(200).json(user)
+            })
+            .catch(err => {
+                res.status(400).json({ Error: `Bad Request: ${err}` })
+            })
+    })
 
 
 //Gets a single user by ID

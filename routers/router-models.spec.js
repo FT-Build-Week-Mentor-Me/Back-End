@@ -53,5 +53,17 @@ describe('testing the threads endpoints/model', () => {
             const allThreads = await threads.findAllThreads()
             expect(allThreads[2].id).toBe(3)
         })
+        it('will create a thread', async () => {
+            const newThread = {
+                thread_title: "I want to test a thread",
+                thread_body: "What is the best way to test if a thread is being created?",
+                business_type: "Programatic Testing",
+                author_id: 3
+            }
+            const postThread = await request(server)
+                .post('/new-thread')
+                .send(newThread)
+            expect(postThread.body).toStrictEqual({ s })
+        })
     })
 })
