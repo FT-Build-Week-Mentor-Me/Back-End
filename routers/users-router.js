@@ -21,6 +21,7 @@ router.post('/login', (req, res) => {
                     const token = getJwtToken(user)
                     res.status(200).json({
                         message: `Welcome ${user.username}`,
+                        user_id: user.id,
                         token
                     })
                 } else {
@@ -34,10 +35,8 @@ router.post('/login', (req, res) => {
         db.emailLogin(email)
             .first()
             .then(user => {
-
                 if (user && bcrypt.compareSync(password, user.password)) {
                     const token = getJwtToken(user.username)
-                    console.log('This is before toekn gen', user.id)
                     res.status(200).json({
                         message: `Welcome ${user.username}`,
                         token

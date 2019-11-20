@@ -30,11 +30,19 @@ function findUserComments(author_id) {
         .where({ author_id })
 }
 
+function findThreadComments(thread_id) {
+    return db('comments as C')
+        .join('threads as T', 'C.thread_id', 'T.id')
+        .select('C.comment_text')
+        .where({ thread_id })
+}
+
 module.exports = {
     getComments,
     getCommentById,
     postComment,
     updateComment,
     deleteComment,
-    findUserComments
+    findUserComments,
+    findThreadComments
 }
