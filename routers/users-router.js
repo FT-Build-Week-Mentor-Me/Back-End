@@ -68,7 +68,11 @@ router.post('/register', [
 
         db.register(user)
             .then(user => {
-                res.status(200).json(user)
+                res.status(200).json({
+                    username: user.username,
+                    email: user.email,
+                    profile_type: user.profile_type
+                })
             })
             .catch(err => {
                 res.status(400).json({ Error: `Bad Request: ${err}` })
@@ -83,7 +87,11 @@ router.get('/user/:id', (req, res) => {
         .first()
         .then(user => {
             if (user) {
-                res.status(200).json(user)
+                res.status(200).json({
+                    username: user.username,
+                    email: user.email,
+                    profile_type: user.profile_type
+                })
             } else {
                 res.status(404).json(`user does not exist`)
             }
