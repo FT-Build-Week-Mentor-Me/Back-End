@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 
 const db = require('../models/threads-model')
+const userDB = require('../models/users-model')
 
 
 // Gets a users threads from their ID
@@ -52,12 +53,22 @@ router.get('/:id/thread', (req, res) => {
 // creates a new thread
 router.post('/new-thread', (req, res) => {
     const thread = req.body
-    db.addThread(thread)
-        .then(thread => {
-            res.status(200).json(thread)
+    userDB.findById(thread.author_id)
+        .then(user => {
+            if (user) {
+                db.addThread(thread)
+                    .then(thread => {
+                        res.status(200).json(thread)
+                    })
+                    .catch(err => {
+                        res.status(404).json({ ERROR: `Bad Request ${err}` })
+                    })
+            } else {
+                res.status(404).json(`Invalid User ID`)
+            }
         })
         .catch(err => {
-            res.status(404).json({ ERROR: `Bad Request ${err}` })
+            res.status(400).json({ ERROR: `Unable to submit thread: ${err}` })
         })
 })
 
