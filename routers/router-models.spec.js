@@ -63,7 +63,8 @@ describe('testing the threads endpoints/model', () => {
             const postThread = await request(server)
                 .post('/new-thread')
                 .send(newThread)
-            expect(postThread.body).toStrictEqual({ s })
+            expect(postThread.body).toStrictEqual({})
         })
     })
+
 })

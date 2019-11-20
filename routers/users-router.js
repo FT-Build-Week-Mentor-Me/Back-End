@@ -80,6 +80,7 @@ router.post('/register', [
 router.get('/user/:id', (req, res) => {
     const id = req.params.id
     db.findById(id)
+        .first()
         .then(user => {
             if (user) {
                 res.status(200).json(user)

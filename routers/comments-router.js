@@ -2,6 +2,7 @@ const router = require('express').Router()
 const bcrypt = require('bcryptjs')
 
 const db = require('../models/comments-model')
+const usersDB = require('../models/users-model')
 
 router.get('/comments', (req, res) => {
     db.getComments()
@@ -26,12 +27,22 @@ router.get('/comments/:id', (req, res) => {
 
 router.post('/new-comment', (req, res) => {
     const comment = req.body
-    db.postComment(comment)
-        .then(newComment => {
-            res.status(200).json(newComment)
+    usersDB.findById(comment.author_id)
+        .then(user => {
+            if (user) {
+                db.postComment(comment)
+                    .then(newComment => {
+                        res.status(200).json(newComment)
+                    })
+                    .catch(err => {
+                        res.status(400).json(`broken ${err}`)
+                    })
+            } else {
+                res.status(404).json(`INVALID USER`)
+            }
         })
         .catch(err => {
-            res.status(400).json(`Cannot create a new comment at this time`)
+            res.status(400).json({ ERROR: `Unable to connect to server ${err}` })
         })
 })
 
