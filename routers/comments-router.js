@@ -15,6 +15,21 @@ router.get('/comments', (req, res) => {
         })
 })
 
+router.get('/thread/:id/comments', (req, res) => {
+    const id = req.params.id
+    db.findThreadComments(id)
+        .then(comments => {
+            if (comments.length > 0) {
+                res.status(200).json(comments)
+            } else {
+                res.status(404).json(`invalid thread ID`)
+            }
+        })
+        .catch(err => {
+            res.status(400).json(`didn't work`)
+        })
+})
+
 router.get('/comments/:id', (req, res) => {
     const id = req.params.id
     db.getCommentById(id)
