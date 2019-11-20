@@ -87,11 +87,7 @@ router.get('/user/:id', (req, res) => {
         .first()
         .then(user => {
             if (user) {
-                res.status(200).json({
-                    username: user.username,
-                    email: user.email,
-                    profile_type: user.profile_type
-                })
+                res.status(200).json(user)
             } else {
                 res.status(404).json(`user does not exist`)
             }
