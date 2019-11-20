@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 
 const db = require('../models/comments-model')
 const usersDB = require('../models/users-model')
+const threadDB = require('../models/threads-model')
 
 router.get('/comments', (req, res) => {
     db.getComments()
@@ -26,24 +27,30 @@ router.get('/comments/:id', (req, res) => {
 })
 
 router.post('/new-comment', (req, res) => {
-    const comment = req.body
-    usersDB.findById(comment.author_id)
-        .then(user => {
-            if (user) {
-                db.postComment(comment)
-                    .then(newComment => {
-                        res.status(200).json(newComment)
-                    })
-                    .catch(err => {
-                        res.status(400).json(`broken ${err}`)
-                    })
-            } else {
-                res.status(404).json(`INVALID USER`)
-            }
-        })
-        .catch(err => {
-            res.status(400).json({ ERROR: `Unable to connect to server ${err}` })
-        })
+    const comment = req.body.author_id && req.body.thread_id ? req.body : null
+    const thread = threadDB.findThreadById(comment.thread_id).then(ress => ress) ? true : false
+    console.log('returning from comment_text.length', comment.comment_text.length)
+    if (comment.comment_text.length === 0) {
+        res.status(401).json(`Comment cannot be empty`)
+    } else {
+        usersDB.findById(comment.author_id)
+            .then(user => {
+                if (user && thread) {
+                    db.postComment(comment)
+                        .then(newComment => {
+                            res.status(200).json(newComment)
+                        })
+                        .catch(err => {
+                            res.status(400).json(`${comment.thread_id} is not a valid thread id `)
+                        })
+                } else {
+                    res.status(404).json(`${comment.author_id} is not a valid user id`)
+                }
+            })
+            .catch(err => {
+                res.status(400).json({ ERROR: `Unable to connect to server ${err}` })
+            })
+    }
 })
 
 router.put('/comments/:id', (req, res) => {
