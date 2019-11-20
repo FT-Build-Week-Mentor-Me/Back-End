@@ -26,7 +26,6 @@ function emailLogin(userEmail) {
 
 
 
-
 module.exports = {
     register,
     usernameLogin,

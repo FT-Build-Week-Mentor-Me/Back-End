@@ -23,10 +23,18 @@ async function deleteComment(id) {
     return db('comments').where({ id }).del().then(() => deleted)
 }
 
+function findUserComments(author_id) {
+    return db('comments as C')
+        .join('users as U', 'C.author_id ', 'U.id')
+        .select('U.profile_type')
+        .where({ author_id })
+}
+
 module.exports = {
     getComments,
     getCommentById,
     postComment,
     updateComment,
-    deleteComment
+    deleteComment,
+    findUserComments
 }
